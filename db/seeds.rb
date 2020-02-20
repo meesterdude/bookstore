@@ -8,5 +8,7 @@
 
 publisher = Publisher.create(name: 'westinghouse')
 publisher.books.create(title: '1984')
-shop = Shop.create(name: 'amazon')
-publisher.books.last.shop_books.create(shop: shop, copies_in_stock: 3)
+amazon = Shop.create(name: 'amazon')
+borders = Shop.create(name: 'borders')
+publisher.books.last.shop_books.create(shop: amazon, copies_in_stock: 3)
+publisher.books.last.shop_books.create(shop: borders, copies_in_stock: 30)

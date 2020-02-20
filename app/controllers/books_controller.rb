@@ -1,53 +1,34 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: [:show, :update, :destroy]
+  before_action :set_shop
+  before_action :set_book
+  before_action :set_shop_book
 
-  # GET /books
-  # GET /books.json
-  def index
-    @books = Book.all
-  end
-
-  # GET /books/1
-  # GET /books/1.json
-  def show
-  end
-
-  # POST /books
-  # POST /books.json
-  def create
-    @book = Book.new(book_params)
-
-    if @book.save
-      render :show, status: :created, location: @book
+  def sell
+    if count <= @shop_book.copies_in_stock
+      @shop.increment!(:books_sold_count, count)
+      @shop_book.decrement!(:copies_in_stock, count)
+      head :accepted
     else
-      render json: @book.errors, status: :unprocessable_entity
+      head :unprocessable_entity 
     end
-  end
-
-  # PATCH/PUT /books/1
-  # PATCH/PUT /books/1.json
-  def update
-    if @book.update(book_params)
-      render :show, status: :ok, location: @book
-    else
-      render json: @book.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /books/1
-  # DELETE /books/1.json
-  def destroy
-    @book.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_book
-      @book = Book.find(params[:id])
-    end
+    
+  def set_shop
+    @shop = Shop.find(params[:shop_id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def book_params
-      params.require(:book).permit(:title)
-    end
+  def set_book
+    @book = @shop.books.find(params[:id])
+  end
+
+  def set_shop_book
+    @shop_book = @shop.shop_books.where(book: @book).first
+  end
+
+  def count
+    params[:count].to_i
+  end
+
 end

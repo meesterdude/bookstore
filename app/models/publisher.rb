@@ -10,4 +10,6 @@
 
 class Publisher < ApplicationRecord
 	has_many :books
+	has_many :shop_books, through: :books
+	has_many :shops, -> { order(books_sold_count: :desc) }, through: :shop_books
 end
