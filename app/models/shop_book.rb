@@ -1,0 +1,2 @@
+class ShopBook < ApplicationRecord
+end
