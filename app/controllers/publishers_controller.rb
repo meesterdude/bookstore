@@ -3,7 +3,7 @@ class PublishersController < ApplicationController
 
   # GET /publishers/1.json
   def show
-    @shops = @publisher.shop_books.map(&:shop)
+    @shops = @publisher.shop_books.map(&:shop).sort_by(&:books_sold_count).reverse
   end
 
 
